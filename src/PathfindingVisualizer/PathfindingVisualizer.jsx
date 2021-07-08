@@ -52,7 +52,7 @@ export default class PathfindingVisualizer extends Component {
     this.state = {
       grid: [],
       mouseIsPressed: false,
-      topMessage: "Starting",
+      status: "Starting",
       weight: 1,
       changeWeight: false,
       distanceToBeTraveled: 0,
@@ -74,8 +74,8 @@ export default class PathfindingVisualizer extends Component {
       body = doc.getElementsByTagName('body')[0],
       x = win.innerWidth || docElem.clientWidth || body.clientWidth,
       y = win.innerHeight || docElem.clientHeight || body.clientHeight;
-    row_max_length = (y / 25) / 1.4;
-    col_max_length = x / 25;
+    row_max_length = (y / 22) / 1.4;
+    col_max_length = x / 22;
     START_NODE_ROW = Math.round(row_max_length / 2) - 2;
     START_NODE_COL = 6;
     FINISH_NODE_ROW = Math.round(row_max_length / 2) - 2;
@@ -99,7 +99,7 @@ export default class PathfindingVisualizer extends Component {
 
   // On pressing the mouse down
   handleMouseDown(row, col) {
-    if (this.state.topMessage !== "Starting") return;
+    if (this.state.status !== "Starting") return;
     if (!(this.setStart || this.setEnd)) {
       let newGrid = [];
 
@@ -128,7 +128,7 @@ export default class PathfindingVisualizer extends Component {
 
   // On entering the new node element.
   handleMouseEnter(row, col) {
-    if (this.state.topMessage !== "Starting") return;
+    if (this.state.status !== "Starting") return;
     if (this.setStart || this.setEnd) return;
     if (!this.state.mouseIsPressed) return;
 
@@ -153,7 +153,7 @@ export default class PathfindingVisualizer extends Component {
 
   // When we release the mouse
   handleMouseUp() {
-    if (this.state.topMessage !== "Starting") return;
+    if (this.state.status !== "Starting") return;
     this.setState({
       mouseIsPressed: false
     });
@@ -184,7 +184,7 @@ export default class PathfindingVisualizer extends Component {
 
   visualizeDijkstra() {
     this.setState({
-      topMessage: "Calculating Shortest Path"
+      status: "Calculating Shortest Path"
     });
     const {
       grid
@@ -197,7 +197,7 @@ export default class PathfindingVisualizer extends Component {
   }
   visualizeAstar() {
     this.setState({
-      topMessage: "Calculating Shortest Path"
+      status: "Calculating Shortest Path"
     });
     const {
       grid
@@ -212,7 +212,7 @@ export default class PathfindingVisualizer extends Component {
   }
   visualizeGreedyBFS() {
     this.setState({
-      topMessage: "Calculating Shortest Path"
+      status: "Calculating Shortest Path"
     });
       const { grid } = this.state;
       const startNode = grid[START_NODE_ROW][START_NODE_COL];
@@ -225,7 +225,7 @@ export default class PathfindingVisualizer extends Component {
   }
   visualizeBidirectionalGreedySearch() {
     this.setState({
-      topMessage: "Calculating Shortest Path"
+      status: "Calculating Shortest Path"
     });
     const { grid } = this.state;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
@@ -270,7 +270,7 @@ export default class PathfindingVisualizer extends Component {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           this.setState({
-            topMessage: "Shortest Path"
+            status: "Shortest Path"
           });
           this.animateShortestPath(nodesInShortestPathOrder);
         }, this.state.speed * i);
@@ -311,7 +311,7 @@ export default class PathfindingVisualizer extends Component {
         );
         if (isShortedPath) {
           this.setState({
-            topMessage: "Shortest Path"
+            status: "Shortest Path"
           });
           this.animateShortestPath(
             nodesInShortestPathOrder,
@@ -334,7 +334,6 @@ export default class PathfindingVisualizer extends Component {
 }
 
   animateShortestPath(nodesInShortestPathOrder) {
-    let timeTaken = 0;
     for (let i = 1; i < nodesInShortestPathOrder.length - 1; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
@@ -347,9 +346,9 @@ export default class PathfindingVisualizer extends Component {
         }
       }, this.state.speed * 5 * i);
     }
-    this.setState({
-      algo: -1
-    });
+    let timeTaken =
+      nodesInShortestPathOrder[nodesInShortestPathOrder.length - 1].distance;
+    this.setState({ distanceToBeTraveled: timeTaken,  algo: -1});
   }
 
   animateMaze = (walls) => {
@@ -521,7 +520,8 @@ export default class PathfindingVisualizer extends Component {
       const {
         grid,
         mouseIsPressed,
-        topMessage,
+        status,
+        distanceToBeTraveled,
         algo,
       } = this.state;
       let button_task = ( <
@@ -560,7 +560,7 @@ export default class PathfindingVisualizer extends Component {
         /div>
       );
 
-      if (topMessage === "Shortest Path") {
+      if (status === "Shortest Path") {
         button_task = ( <
           div
 
@@ -582,7 +582,7 @@ export default class PathfindingVisualizer extends Component {
           div >
 
         );
-      } else if (topMessage === "Calculating Shortest Path") {
+      } else if (status === "Calculating Shortest Path") {
         button_task = < h3 className = "running" > Running... < /h3>;
       }
 
@@ -702,7 +702,7 @@ export default class PathfindingVisualizer extends Component {
         <
         div className = "dropdown mazePick" >
         <
-        p className = "dropbtn" > Generate Walls < /p> <
+        p className = "dropbtn" > Generate a Maze < /p> <
         div className = "dropdown-content" >
         <
         a onClick = {
@@ -733,11 +733,11 @@ export default class PathfindingVisualizer extends Component {
         div >
       );
 
-      if (topMessage === "Calculating Shortest Path") {
+      if (status === "Calculating Shortest Path") {
         textBox = ( <
           div className = "space" > < /div>
         );
-      } else if (topMessage === "Shortest Path") {
+      } else if (status === "Shortest Path") {
         textBox = ( <
           div > {
             button_task
@@ -763,7 +763,7 @@ export default class PathfindingVisualizer extends Component {
                 heading = ( < h2 > Bidirectional Greedy Search Algorithm < /h2>)
                 }
             else if (algo === -1) {
-              heading = ( < h2 > No Path Found! < /h2>)
+              heading = ( < h2 > Distance travelled is: {distanceToBeTraveled} < /h2>)
               }
 
               return ( <
@@ -902,6 +902,7 @@ export default class PathfindingVisualizer extends Component {
               isStart: row === START_NODE_ROW && col === START_NODE_COL,
               isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
               distance: Infinity,
+              totalDistance: Infinity,
               isVisited: false,
               isWall: false,
               isWeight: false,

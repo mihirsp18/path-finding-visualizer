@@ -17,7 +17,7 @@ export function astar(grid, startNode, finishNode) {
 
     let neighbours = getNeighbours(closestNode, grid);
     for (let neighbour of neighbours) {
-      let distance = closestNode.distance + 1;
+      let distance = closestNode.distance + 1 + closestNode.weight;
       //f(n) = g(n) + h(n)
       if (neighbourNotInUnvisitedNodes(neighbour, unvisitedNodes)) {
         unvisitedNodes.unshift(neighbour);

@@ -36,16 +36,16 @@ export function bidirectionalGreedySearch(grid, startNode, finishNode) {
         visitedNodesInOrderFinish.push(neighbour);
         return [visitedNodesInOrderStart, visitedNodesInOrderFinish, true];
       }
-      let distance = closestNodeStart.distance + 1;
+      let distance = closestNodeStart.distance + 1 + closestNodeStart.weight;
       //f(n) = h(n)
       if (neighbourNotInUnvisitedNodes(neighbour, unvisitedNodesStart)) {
         unvisitedNodesStart.unshift(neighbour);
         neighbour.distance = distance;
-        neighbour.totalDistance = manhattenDistance(neighbour, finishNode);
+        neighbour.totalDistance = manhattenDistance(neighbour, finishNode)+neighbour.weight;
         neighbour.previousNode = closestNodeStart;
       } else if (distance < neighbour.distance) {
         neighbour.distance = distance;
-        neighbour.totalDistance = manhattenDistance(neighbour, finishNode);
+        neighbour.totalDistance = manhattenDistance(neighbour, finishNode)+neighbour.weight;
         neighbour.previousNode = closestNodeStart;
       }
     }
@@ -58,16 +58,16 @@ export function bidirectionalGreedySearch(grid, startNode, finishNode) {
         visitedNodesInOrderStart.push(neighbour);
         return [visitedNodesInOrderStart, visitedNodesInOrderFinish, true];
       }
-      let distance = closestNodeFinish.distance + 1;
+      let distance = closestNodeFinish.distance + 1 + closestNodeFinish.weight;
       //f(n) = h(n)
       if (neighbourNotInUnvisitedNodes(neighbour, unvisitedNodesFinish)) {
         unvisitedNodesFinish.unshift(neighbour);
         neighbour.distance = distance;
-        neighbour.totalDistance = manhattenDistance(neighbour, startNode);
+        neighbour.totalDistance = manhattenDistance(neighbour, startNode)+neighbour.weight;
         neighbour.previousNode = closestNodeFinish;
       } else if (distance < neighbour.distance) {
         neighbour.distance = distance;
-        neighbour.totalDistance = manhattenDistance(neighbour, startNode);
+        neighbour.totalDistance = manhattenDistance(neighbour, startNode)+neighbour.weight;
         neighbour.previousNode = closestNodeFinish;
       }
     }
@@ -118,16 +118,20 @@ export function getNodesInShortestPathOrderBidirectionalGreedySearch(
   nodeA,
   nodeB
 ) {
+  let distance= 0;
   let nodesInShortestPathOrder = [];
   let currentNode = nodeB;
   while (currentNode !== null) {
+    distance = distance + 1 + currentNode.weight;
     nodesInShortestPathOrder.push(currentNode);
     currentNode = currentNode.previousNode;
   }
   currentNode = nodeA;
   while (currentNode !== null) {
+    distance = distance + 1 + currentNode.weight;
     nodesInShortestPathOrder.unshift(currentNode);
     currentNode = currentNode.previousNode;
   }
+  nodesInShortestPathOrder[nodesInShortestPathOrder.length - 1].distance = distance -1;
   return nodesInShortestPathOrder;
 }

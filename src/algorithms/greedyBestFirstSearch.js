@@ -17,16 +17,16 @@ export function greedyBFS(grid, startNode, finishNode) {
 
     let neighbours = getNeighbours(closestNode, grid);
     for (let neighbour of neighbours) {
-      let distance = closestNode.distance + 1;
+      let distance = closestNode.distance + 1 + closestNode.weight;
       //f(n) = h(n)
       if (neighbourNotInUnvisitedNodes(neighbour, unvisitedNodes)) {
         unvisitedNodes.unshift(neighbour);
         neighbour.distance = distance;
-        neighbour.totalDistance = manhattenDistance(neighbour, finishNode);
+        neighbour.totalDistance = manhattenDistance(neighbour, finishNode)+neighbour.weight;
         neighbour.previousNode = closestNode;
       } else if (distance < neighbour.distance) {
         neighbour.distance = distance;
-        neighbour.totalDistance = manhattenDistance(neighbour, finishNode);
+        neighbour.totalDistance = manhattenDistance(neighbour, finishNode)+neighbour.weight;
         neighbour.previousNode = closestNode;
       }
     }
@@ -59,6 +59,9 @@ function neighbourNotInUnvisitedNodes(neighbour, unvisitedNodes) {
     }
   }
   return true;
+}
+function sortNodesByDistance(unvisitedNodes) {
+  unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 }
 
 export function getNodesInShortestPathOrderGreedyBFS(finishNode) {
