@@ -60,7 +60,7 @@ export default class PathfindingVisualizer extends Component {
       setEnd: false,
       algo: 0,
       generatingMaze: false,
-      speed: 10,
+      speed: 12,
       mazeSpeed: 10,
       constructingMaze: false,
     };
@@ -79,12 +79,10 @@ export default class PathfindingVisualizer extends Component {
     // row_max_length = (y / 22) / 1.45;
     row_max_length = Math.ceil(y / 24);
     col_max_length = Math.ceil(x / 24);
-    START_NODE_ROW = Math.floor(row_max_length / 2);
+    START_NODE_ROW = Math.floor(row_max_length / 2) -2;
     START_NODE_COL = 6;
-    FINISH_NODE_ROW = Math.floor(row_max_length / 2) - 2;
+    FINISH_NODE_ROW = Math.floor(row_max_length / 2) -2;
     FINISH_NODE_COL = Math.floor(col_max_length - 6);
-    console.log(FINISH_NODE_COL);
-
 
     const grid = getInitialGrid();
     this.setState({
@@ -321,9 +319,13 @@ export default class PathfindingVisualizer extends Component {
             visitedNodesInOrder
           );
         }
+        else {
+          this.setState({status: "Shortest Path", distanceToBeTraveled: Infinity,  algo: -1});
+        }
       }, i * this.state.speed);
       return;
     }
+    console.log("sup")
     setTimeout(() => {
       //visited nodes
       if (nodeA !== undefined)
@@ -392,7 +394,7 @@ export default class PathfindingVisualizer extends Component {
       const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
       const walls = randomMaze(grid, startNode, finishNode);
       this.animateMaze(walls);
-    }, this.state.mazeSpeed);
+    }, this.state.mazeSpeed*3);
   }
   generateRecursiveDivisionMaze() {
     if (this.state.constructingMaze) {
