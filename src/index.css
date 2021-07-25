@@ -11,35 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-footer {
-  font-family: 'Amatic SC', cursive;
-  font-size: 27px;
-  position: fixed;
-  width: 100%;
-  height: 5%;
-  bottom: 0px;
-  text-align: center;
-  padding: 3px;
-  background-color: #212529;
-  color: white;
-}
-.footer__author{
-  padding: 13px
-}
-a:link {
-  color: #FD413C;
-}
 
-a:visited {
-  color: #FD413C;
+#root{
+  height: auto
 }
-
-a:hover {
-  color: #D00000
-}
-
-a:active {
-  color: #fff;
-  background-color: transparent;
-  text-decoration: underline;
+.App{
+  height: auto
 }

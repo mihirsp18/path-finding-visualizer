@@ -68,18 +68,21 @@ export default class PathfindingVisualizer extends Component {
 
   // Creating grid
   componentDidMount() {
-    var win = window,
-      doc = document,
-      docElem = doc.documentElement,
-      body = doc.getElementsByTagName('body')[0],
-      x = win.innerWidth || docElem.clientWidth || body.clientWidth,
-      y = win.innerHeight || docElem.clientHeight || body.clientHeight;
-    row_max_length = (y / 22) / 1.4;
-    col_max_length = x / 22;
-    START_NODE_ROW = Math.round(row_max_length / 2) - 2;
+    // var win = window,
+    // doc = document,
+    // docElem = doc.documentElement,
+    // body = doc.getElementsByTagName('body')[0],
+    //   x = win.innerWidth || docElem.clientWidth || body.clientWidth,
+    //   y = win.innerHeight || docElem.clientHeight || body.clientHeight;
+    let x = document.getElementById('gridBody').clientWidth - 4
+    let y = document.getElementById('gridBody').clientHeight - 4
+    // row_max_length = (y / 22) / 1.45;
+    row_max_length = Math.ceil(y / 24);
+    col_max_length = Math.ceil(x / 24);
+    START_NODE_ROW = Math.floor(row_max_length / 2);
     START_NODE_COL = 6;
-    FINISH_NODE_ROW = Math.round(row_max_length / 2) - 2;
-    FINISH_NODE_COL = Math.round(col_max_length - 6);
+    FINISH_NODE_ROW = Math.floor(row_max_length / 2) - 2;
+    FINISH_NODE_COL = Math.floor(col_max_length - 6);
     console.log(FINISH_NODE_COL);
 
 
@@ -729,8 +732,8 @@ export default class PathfindingVisualizer extends Component {
         div > <
         div > {
           button_task
-        } < /div> < /
-        div >
+        } < /div>
+        < / div >
       );
 
       if (status === "Calculating Shortest Path") {
@@ -766,8 +769,8 @@ export default class PathfindingVisualizer extends Component {
               heading = ( < h2 > Distance travelled is: {distanceToBeTraveled} < /h2>)
               }
 
-              return ( <
-                div className = "pathfindingVisualizer" >
+              return (
+                <div className = "pathfindingVisualizer" >
                 <
                 div className = "container" >
                 <
@@ -855,9 +858,12 @@ export default class PathfindingVisualizer extends Component {
                   })
                 } <
                 /tbody> < /
-                table > <
-                /div> < /
-                div >
+                table >
+                <footer>
+                  <p class="footer__author">Check out the source code at: &ensp;<a href="https://github.com/mihirsp18/path-finding-visualizer"><i class="fab fa-github"></i></a></p>
+                </footer>
+                </div>
+                </div >
               );
             }
           }
